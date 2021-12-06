@@ -1,0 +1,250 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum VideoProvider {
+  YOUTUBE
+}
+
+enum AuthProvider {
+  OWN
+  GOOGLE
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Photo {
+  id           String        @id @default(cuid())
+  md5          String
+  mimeType     String
+  profilePhoto ProfilePhoto?
+  recipePhoto  RecipePhoto?
+  createdAt    DateTime      @default(now())
+
+  @@index([md5])
+}
+
+model Video {
+  id          String        @id @default(cuid())
+  video       String
+  provider    VideoProvider
+  recipeVideo RecipeVideo?
+  createdAt   DateTime      @default(now())
+
+  @@index([video])
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  password     UserPassword?
+  authProvider AuthProvider  @default(OWN)
+  role         Role          @default(USER)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  profile      Profile?
+  userTokens   UserToken[]
+
+  @@index([role])
+}
+
+model UserPassword {
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String @id
+  password String
+}
+
+model UserToken {
+  id          String   @id @default(cuid())
+  accessToken String   @unique
+  device      String
+  lastUsedAt  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+}
+
+model Profile {
+  user                  User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String            @unique
+  username              String            @id
+  name                  String
+  photo                 ProfilePhoto?
+  recipes               Recipe[]
+  favoriteRecipes       FavoriteRecipes[]
+  ratings               RecipeRating[]
+  createdRecipeReports  RecipeReport[]
+  createdProfileReports ProfileReport[]   @relation("CreatedProfileReports")
+  profileReports        ProfileReport[]   @relation("ProfileReports")
+  certifiedChef         CertifiedChef?
+
+  @@index([name])
+}
+
+model ProfilePhoto {
+  photo           Photo   @relation(fields: [photoId], references: [id])
+  photoId         String  @id
+  profile         Profile @relation(fields: [profileUsername], references: [username], onDelete: Cascade)
+  profileUsername String  @unique
+}
+
+model ProfileReport {
+  id               String   @id @default(cuid())
+  reported         Profile  @relation("ProfileReports", fields: [reportedUsername], references: [username], onDelete: Cascade)
+  reportedUsername String
+  author           Profile  @relation("CreatedProfileReports", fields: [authorUsername], references: [username], onDelete: Cascade)
+  authorUsername   String
+  reason           String
+  createdAt        DateTime @default(now())
+
+  @@index([authorUsername, reportedUsername])
+}
+
+model FavoriteRecipes {
+  profile  Profile @relation(fields: [username], references: [username], onDelete: Cascade)
+  username String
+  recipe   Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String
+
+  @@id([username, recipeId])
+}
+
+model CertifiedChef {
+  profile  Profile @relation(fields: [username], references: [username], onDelete: Cascade)
+  username String  @id
+  stars    Int
+
+  @@index([stars])
+}
+
+model Recipe {
+  id             String             @id @default(cuid())
+  author         Profile            @relation(fields: [authorUsername], references: [username], onDelete: Cascade)
+  authorUsername String
+  steps          RecipeStep[]
+  ingredients    RecipeIngredient[]
+  photos         RecipePhoto[]
+  video          RecipeVideo?
+  reports        RecipeReport[]
+  ratings        RecipeRating[]
+  favoritesOf    FavoriteRecipes[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@index([authorUsername])
+}
+
+model RecipePhoto {
+  photo      Photo             @relation(fields: [photoId], references: [id])
+  photoId    String            @unique
+  recipe     Recipe            @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId   String
+  stepPhotos RecipeStepPhoto[]
+
+  @@id([photoId, recipeId])
+}
+
+model RecipeVideo {
+  video    Video                   @relation(fields: [videoId], references: [id])
+  videoId  String                  @unique
+  recipe   Recipe                  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String                  @unique
+  timings  RecipeStepVideoTiming[]
+
+  @@id([videoId, recipeId])
+}
+
+model RecipeIngredient {
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String
+  name     String
+  quantity String
+
+  @@id([name, recipeId])
+  @@index([name])
+}
+
+model RecipeStep {
+  number      Int
+  recipe      Recipe                 @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId    String
+  description String
+  timer       RecipeStepTimer?
+  tool        RecipeStepTool?
+  videoTiming RecipeStepVideoTiming?
+  photos      RecipeStepPhoto[]
+
+  @@id([number, recipeId])
+}
+
+model RecipeStepPhoto {
+  recipePhoto   RecipePhoto @relation(fields: [recipePhotoId, recipeId], references: [photoId, recipeId])
+  recipePhotoId String
+  step          RecipeStep  @relation(fields: [stepNumber, recipeId], references: [number, recipeId], onDelete: Cascade)
+  stepNumber    Int
+  recipeId      String
+
+  @@id([recipePhotoId, stepNumber])
+}
+
+model RecipeStepVideoTiming {
+  video      RecipeVideo @relation(fields: [videoId], references: [videoId])
+  videoId    String
+  step       RecipeStep  @relation(fields: [stepNumber, recipeId], references: [number, recipeId], onDelete: Cascade)
+  stepNumber Int
+  recipeId   String
+  seconds    BigInt
+
+  @@id([recipeId, stepNumber])
+}
+
+model RecipeStepTimer {
+  step       RecipeStep @relation(fields: [stepNumber, recipeId], references: [number, recipeId], onDelete: Cascade)
+  stepNumber Int
+  recipeId   String
+  seconds    BigInt
+
+  @@id([recipeId, stepNumber])
+}
+
+model RecipeStepTool {
+  step        RecipeStep @relation(fields: [stepNumber, recipeId], references: [number, recipeId], onDelete: Cascade)
+  stepNumber  Int
+  recipeId    String
+  description String
+  link        String
+
+  @@id([recipeId, stepNumber])
+}
+
+model RecipeReport {
+  id             String   @id @default(cuid())
+  recipe         Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId       String
+  author         Profile  @relation(fields: [authorUsername], references: [username])
+  authorUsername String
+  reason         String
+  createdAt      DateTime @default(now())
+
+  @@index([authorUsername])
+}
+
+model RecipeRating {
+  recipe         Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId       String
+  author         Profile @relation(fields: [authorUsername], references: [username], onDelete: Cascade)
+  authorUsername String
+  rating         Int
+
+  @@id([recipeId, authorUsername])
+}
