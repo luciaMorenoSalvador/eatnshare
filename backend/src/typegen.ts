@@ -576,6 +576,11 @@ export interface NexusGenArgTypes {
       idToken?: string | null; // String
       password?: string | null; // String
     }
+    createAccount: { // args
+      authProvider?: NexusGenEnums['AuthProvider'] | null; // AuthProvider
+      email: string; // String!
+      password?: string | null; // String
+    }
   }
   Query: {
     getUserById: { // args

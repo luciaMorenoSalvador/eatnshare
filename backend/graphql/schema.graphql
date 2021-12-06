@@ -62,7 +62,7 @@ type Mutation {
   authenticate(email: String!, idToken: String, password: String): UserToken
 
   """Create a new account"""
-  createAccount: UserToken
+  createAccount(authProvider: AuthProvider, email: String!, password: String): UserToken
 }
 
 interface Photo {
