@@ -3,6 +3,7 @@
       "module": "CommonJS",
       "sourceMap": true,
       "moduleResolution": "node",
+      "noImplicitAny": false,
       "sourceRoot": "src",
       "outDir": "dist",
       "strict": true,

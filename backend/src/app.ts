@@ -5,11 +5,11 @@ import * as types from './schema'
 makeSchema({
     types,
     contextType: {
-        module: join(__dirname, './context.ts'),
+        module: join(__dirname, '../src/context.ts'),
         export: 'Context'
     },
     outputs: {
         schema: join(__dirname, '../graphql/schema.graphql'),
-        typegen: join(__dirname, 'typegen.ts')
+        typegen: join(__dirname, '../src/typegen.ts')
     }
 })

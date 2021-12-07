@@ -1,13 +1,15 @@
-FROM node:14-alpine as builder
+FROM node:16-alpine as builder
 
 WORKDIR /app
 
-COPY tsconfig.json .
 COPY package.json .
 COPY yarn.lock .
-COPY . .
 
 RUN yarn install --frozen-lockfile
+
+COPY tsconfig.json .
+COPY . .
+
 RUN yarn run build
 
 FROM node:14-alpine as runner
