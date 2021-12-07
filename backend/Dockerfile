@@ -7,6 +7,10 @@ COPY yarn.lock .
 
 RUN yarn install --frozen-lockfile
 
+COPY ./prisma/ .
+
+RUN yarn prisma generate
+
 COPY tsconfig.json .
 COPY . .
 

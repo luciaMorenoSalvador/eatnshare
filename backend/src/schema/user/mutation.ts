@@ -1,6 +1,6 @@
 import { AuthenticationError } from "apollo-server-errors";
 import { extendType, nonNull, nullable, stringArg } from "nexus";
-import { AuthProvider, UserToken } from ".";
+import { UserToken } from ".";
 import * as argon from "argon2";
 import * as crypto from "crypto"
 
@@ -17,8 +17,7 @@ export const UserMutation = extendType({
             description: 'Authenticate an user',
             args: {
                 email: nonNull(stringArg()),
-                password: nullable(stringArg()),
-                idToken: nullable(stringArg())
+                password: nullable(stringArg())
             },
             async resolve(_, args, ctx) {
                 const user = await ctx.db.user.findUnique({
@@ -28,38 +27,33 @@ export const UserMutation = extendType({
                 if (!user)
                     throw new AuthenticationError('This user account does not exist')
                 
-                if (args.idToken) {
-                    // TODO: verify jwt: check valid issuer, and check if valid
-                    // perharps AuthProvider needs to be a table with the issuers
-                } else {
-                    const userPassword = await ctx.db.userPassword.findUnique({
-                        where: { userId: user.id }
-                    })
+                const userPassword = await ctx.db.userPassword.findUnique({
+                    where: { userId: user.id }
+                })
 
-                    if (!userPassword)
-                        throw new AuthenticationError('This user account does not exist')
+                if (!userPassword)
+                    throw new AuthenticationError('This user account does not exist')
     
-                    if (!args.password)
-                        throw new AuthenticationError('This user account does not exist')
+                if (!args.password)
+                    throw new AuthenticationError('This user account does not exist')
 
-                    const correct = await argon.verify(
-                        userPassword.password, 
-                        args.password, 
-                        {
-                            // https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#argon2id
-                            type: argon.argon2id
-                        }
-                    )
+                const correct = await argon.verify(
+                    userPassword.password, 
+                    args.password, 
+                    {
+                        // https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#argon2id
+                        type: argon.argon2id
+                    }
+                )
 
-                    if (!correct)
-                        throw new AuthenticationError('This user account does not exist')
-                }
+                if (!correct)
+                    throw new AuthenticationError('This user account does not exist')
 
                 // create the user token
                 const created = await ctx.db.userToken.create({
                     data: {
                         accessToken: generateAccessToken(),
-                        device: '', // TODO: device from user-agent
+                        device: ctx.userAgent,
                         userId: user.id
                     }
                 })
@@ -68,13 +62,20 @@ export const UserMutation = extendType({
             }
         })
 
+        t.field('authenticateGoogle', {
+            type: UserToken,
+            description: 'Authenticate an user with Google IdP',
+            args: {
+                idToken: nonNull(stringArg())
+            }
+        })
+
         t.field('createAccount', {
             type: UserToken,
             description: 'Create a new account',
             args: {
                 email: nonNull(stringArg()),
-                password: nullable(stringArg()),
-                authProvider: nullable(AuthProvider)
+                password: nullable(stringArg())
             }
         })
     }

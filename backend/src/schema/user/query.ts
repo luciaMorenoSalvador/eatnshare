@@ -1,4 +1,4 @@
-import { AuthenticationError } from "apollo-server-errors";
+import { AuthenticationError, UserInputError } from "apollo-server-errors";
 import * as argon from "argon2";
 import { extendType, nonNull, nullable, stringArg } from "nexus";
 import { User, UserToken } from ".";
@@ -15,9 +15,13 @@ export const UserQuery = extendType({
             resolve(_, args, ctx) {
                 // TODO: check perms
 
-                return ctx.db.user.findUnique({
+                const user = ctx.db.user.findUnique({
                     where: { id: args.userId }
                 })
+
+                console.log(user)
+
+                return user
             }
         })
 

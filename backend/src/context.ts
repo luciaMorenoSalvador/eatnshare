@@ -1,11 +1,12 @@
-import { PrismaClient } from ".prisma/client"
+import { PrismaClient, User, UserToken } from ".prisma/client"
 
-const prismaClient = new PrismaClient()
-
-export interface Context {
-    db: PrismaClient
+export interface AuthenticatedUser {
+    user: User,
+    userToken: UserToken
 }
 
-export const context: Context = {
-    db: prismaClient
+export interface Context {
+    db: PrismaClient,
+    userAgent: string,
+    authUser?: AuthenticatedUser
 }
