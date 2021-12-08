@@ -18,20 +18,26 @@ export const User = objectType({
     definition(t) {
         t.nonNull.id('id')
         t.nonNull.string('email')
+        t.nonNull.string('name')
+
         t.nonNull.field('authProvider', {
             type: AuthProvider,
             description: 'The authentication provider used to create this account'
         })
+
         t.nonNull.field('role', {
             type: Role,
             description: 'The role of the user'
         })
+
         t.nonNull.date('createdAt', {
             description: 'The date and time at which the user was created'
         })
+
         t.nonNull.date('updatedAt', {
             description: 'The date and time at which the user was last updated'
         })
+
         t.field('profile', {
             type: Profile,
             description: 'The profile associated with this user',
@@ -41,6 +47,7 @@ export const User = objectType({
                 })
             }
         })
+        
         t.nonNull.list.nonNull.field('userTokens', {
             type: UserToken,
             description: 'The tokens associated with the user account',

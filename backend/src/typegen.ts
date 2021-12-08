@@ -57,7 +57,6 @@ export interface NexusGenScalars {
 
 export interface NexusGenObjects {
   ChefProfile: { // root type
-    name: string; // String!
     stars: number; // Int!
     userId: string; // String!
     username: string; // ID!
@@ -143,11 +142,11 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['Date']; // Date!
     email: string; // String!
     id: string; // ID!
+    name: string; // String!
     role: NexusGenEnums['Role']; // Role!
     updatedAt: NexusGenScalars['Date']; // Date!
   }
   UserProfile: { // root type
-    name: string; // String!
     userId: string; // String!
     username: string; // ID!
   }
@@ -184,7 +183,6 @@ export interface NexusGenFieldTypes {
     createdProfileReports: NexusGenRootTypes['ProfileReport'][]; // [ProfileReport!]!
     createdRecipeReports: NexusGenRootTypes['RecipeReport'][]; // [RecipeReport!]!
     favoriteRecipes: NexusGenRootTypes['Recipe'][]; // [Recipe!]!
-    name: string; // String!
     photo: NexusGenRootTypes['ProfilePhoto'] | null; // ProfilePhoto
     profileReports: NexusGenRootTypes['ProfileReport'][]; // [ProfileReport!]!
     recipeRatings: NexusGenRootTypes['Rating'][]; // [Rating!]!
@@ -202,6 +200,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     authenticate: NexusGenRootTypes['UserToken'] | null; // UserToken
+    authenticateGoogle: NexusGenRootTypes['UserToken'] | null; // UserToken
     createAccount: NexusGenRootTypes['UserToken'] | null; // UserToken
   }
   ProfilePhoto: { // field return type
@@ -313,6 +312,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['Date']; // Date!
     email: string; // String!
     id: string; // ID!
+    name: string; // String!
     profile: NexusGenRootTypes['Profile'] | null; // Profile
     role: NexusGenEnums['Role']; // Role!
     updatedAt: NexusGenScalars['Date']; // Date!
@@ -322,7 +322,6 @@ export interface NexusGenFieldTypes {
     createdProfileReports: NexusGenRootTypes['ProfileReport'][]; // [ProfileReport!]!
     createdRecipeReports: NexusGenRootTypes['RecipeReport'][]; // [RecipeReport!]!
     favoriteRecipes: NexusGenRootTypes['Recipe'][]; // [Recipe!]!
-    name: string; // String!
     photo: NexusGenRootTypes['ProfilePhoto'] | null; // ProfilePhoto
     profileReports: NexusGenRootTypes['ProfileReport'][]; // [ProfileReport!]!
     recipeRatings: NexusGenRootTypes['Rating'][]; // [Rating!]!
@@ -356,7 +355,6 @@ export interface NexusGenFieldTypes {
     createdProfileReports: NexusGenRootTypes['ProfileReport'][]; // [ProfileReport!]!
     createdRecipeReports: NexusGenRootTypes['RecipeReport'][]; // [RecipeReport!]!
     favoriteRecipes: NexusGenRootTypes['Recipe'][]; // [Recipe!]!
-    name: string; // String!
     photo: NexusGenRootTypes['ProfilePhoto'] | null; // ProfilePhoto
     profileReports: NexusGenRootTypes['ProfileReport'][]; // [ProfileReport!]!
     recipeRatings: NexusGenRootTypes['Rating'][]; // [Rating!]!
@@ -379,7 +377,6 @@ export interface NexusGenFieldTypeNames {
     createdProfileReports: 'ProfileReport'
     createdRecipeReports: 'RecipeReport'
     favoriteRecipes: 'Recipe'
-    name: 'String'
     photo: 'ProfilePhoto'
     profileReports: 'ProfileReport'
     recipeRatings: 'Rating'
@@ -397,6 +394,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     authenticate: 'UserToken'
+    authenticateGoogle: 'UserToken'
     createAccount: 'UserToken'
   }
   ProfilePhoto: { // field return type name
@@ -508,6 +506,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'Date'
     email: 'String'
     id: 'ID'
+    name: 'String'
     profile: 'Profile'
     role: 'Role'
     updatedAt: 'Date'
@@ -517,7 +516,6 @@ export interface NexusGenFieldTypeNames {
     createdProfileReports: 'ProfileReport'
     createdRecipeReports: 'RecipeReport'
     favoriteRecipes: 'Recipe'
-    name: 'String'
     photo: 'ProfilePhoto'
     profileReports: 'ProfileReport'
     recipeRatings: 'Rating'
@@ -551,7 +549,6 @@ export interface NexusGenFieldTypeNames {
     createdProfileReports: 'ProfileReport'
     createdRecipeReports: 'RecipeReport'
     favoriteRecipes: 'Recipe'
-    name: 'String'
     photo: 'ProfilePhoto'
     profileReports: 'ProfileReport'
     recipeRatings: 'Rating'
@@ -573,13 +570,15 @@ export interface NexusGenArgTypes {
   Mutation: {
     authenticate: { // args
       email: string; // String!
-      idToken?: string | null; // String
-      password?: string | null; // String
+      password: string; // String!
+    }
+    authenticateGoogle: { // args
+      idToken: string; // String!
     }
     createAccount: { // args
-      authProvider?: NexusGenEnums['AuthProvider'] | null; // AuthProvider
       email: string; // String!
-      password?: string | null; // String
+      name: string; // String!
+      password: string; // String!
     }
   }
   Query: {

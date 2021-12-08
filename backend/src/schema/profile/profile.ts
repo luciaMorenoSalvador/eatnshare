@@ -7,7 +7,6 @@ export const Profile = interfaceType({
     definition(t) {
         t.nonNull.id('username')
         t.nonNull.string('userId')
-        t.nonNull.string('name')
 
         t.nonNull.field('user', {
             type: User,

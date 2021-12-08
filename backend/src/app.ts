@@ -5,6 +5,10 @@ import express, { Request } from "express"
 import * as types from "./schema"
 import { AuthenticatedUser, Context } from "./context"
 import { PrismaClient } from ".prisma/client"
+import { OAuth2Client } from "google-auth-library"
+
+const prismaClient = new PrismaClient()
+const googleAuthClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 const schema = makeSchema({
     types,
@@ -21,7 +25,6 @@ const schema = makeSchema({
 const startApolloServer = async (serverPort: number) => {
     const app = express()
 
-    const prismaClient = new PrismaClient()
     const context = async ({ req }: { req: Request }): Promise<Context> => {
         const authHeader = req.headers.authorization
         let authUser: AuthenticatedUser | undefined
@@ -57,6 +60,7 @@ const startApolloServer = async (serverPort: number) => {
 
         return {
             db: prismaClient,
+            googleOAuth: googleAuthClient,
             userAgent: req.headers["user-agent"] || 'Unknown',
             authUser
         }

@@ -48,6 +48,7 @@ model Video {
 model User {
   id           String        @id @default(cuid())
   email        String        @unique
+  name         String
   password     UserPassword?
   authProvider AuthProvider  @default(OWN)
   role         Role          @default(USER)
@@ -56,7 +57,7 @@ model User {
   profile      Profile?
   userTokens   UserToken[]
 
-  @@index([role])
+  @@index([name, role])
 }
 
 model UserPassword {
@@ -78,7 +79,6 @@ model Profile {
   user                  User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                String            @unique
   username              String            @id
-  name                  String
   photo                 ProfilePhoto?
   recipes               Recipe[]
   favoriteRecipes       FavoriteRecipes[]
@@ -87,8 +87,6 @@ model Profile {
   createdProfileReports ProfileReport[]   @relation("CreatedProfileReports")
   profileReports        ProfileReport[]   @relation("ProfileReports")
   certifiedChef         CertifiedChef?
-
-  @@index([name])
 }
 
 model ProfilePhoto {

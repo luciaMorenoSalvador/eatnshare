@@ -1,7 +1,5 @@
-import { AuthenticationError, UserInputError } from "apollo-server-errors";
-import * as argon from "argon2";
-import { extendType, nonNull, nullable, stringArg } from "nexus";
-import { User, UserToken } from ".";
+import { extendType, nonNull, stringArg } from "nexus";
+import { User } from ".";
 
 export const UserQuery = extendType({
     type: 'Query',
