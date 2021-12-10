@@ -1,38 +1,17 @@
-import React, { useEffect, useState } from "react"
-import Modal from "./Modal"
+import { useState } from "react"
+import { ModalState } from "./Modal"
 
-export interface ModalState {
-    readonly hidden: boolean
-    show: () => void
-    hide: () => void
-}
-
-const useModal = (content: JSX.Element, destroyOnClose = true, initialState = true): [JSX.Element, ModalState] => {
+const useModal = (destroyOnClose = true, initialState = true): ModalState => {
     const [hidden, setHidden] = useState(initialState)
-    const [loaded, setLoaded] = useState(false)
-
-    // lazy-loading the modal
-    useEffect(() => {
-        if (!hidden)
-            setLoaded(true)
-    }, [hidden])
 
     const state = {
         hidden,
+        destroyOnClose,
         show: () => setHidden(false),
         hide: () => setHidden(true)
     }
 
-    const element = (state.hidden && destroyOnClose) || !loaded ? <></> : (
-        <Modal state={state}>
-            {content}
-        </Modal>
-    )
-
-    return [
-        element,
-        state
-    ]
+    return state
 }
 
 export default useModal
