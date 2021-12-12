@@ -41,7 +41,7 @@ const Modal: React.FC<ModalProps> = props => {
         return <></>
 
     return (
-        <div className="absolute !m-0 !top-0 !left-0 min-w-full min-h-screen bg-black bg-opacity-50 animate-fade-in" hidden={props.state.hidden} onClick={onMouseDown}>
+        <div className="fixed !m-0 !top-0 !left-0 min-w-full min-h-screen backdrop-blur-sm bg-black bg-opacity-50 animate-fade-in" hidden={props.state.hidden} onClick={onMouseDown}>
             <div className="flex min-w-full min-h-screen justify-center items-center" ref={backRef}>
                 <div className="flex-grow-0 bg-gray-100 shadow-sm rounded-lg animate-fade-in-up">
                     {props.children}

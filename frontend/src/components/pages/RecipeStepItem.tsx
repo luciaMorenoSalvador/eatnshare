@@ -1,5 +1,6 @@
 import { ClockIcon, LinkIcon, MinusIcon, PlusIcon } from "@heroicons/react/solid"
-import React, { ReactEventHandler } from "react"
+import React, { ReactEventHandler, useContext } from "react"
+import { RecipeContext } from "../../pages/CreateRecipe"
 import Button from "../buttons/Button"
 import Input from "../forms/Input"
 import TextArea from "../forms/TextArea"
@@ -16,6 +17,7 @@ export type RecipeStepItemProps = DynamicListItemProps<{
 
 const RecipeStepItem: React.FC<RecipeStepItemProps> = props => {
     const optionsModalState = useModal()
+    const recipeContext = useContext(RecipeContext)
 
     const onInput: ReactEventHandler<HTMLTextAreaElement> = e => {
         const input = e.target as HTMLTextAreaElement
@@ -32,7 +34,7 @@ const RecipeStepItem: React.FC<RecipeStepItemProps> = props => {
             tool: input.value
         })
     }
-    
+
     return (
         <div key={props.item.id}>
             <div className="flex space-x-3 items-start">
@@ -68,19 +70,21 @@ const RecipeStepItem: React.FC<RecipeStepItemProps> = props => {
                                 <div className="flex-initial ml-3">m</div>
                             </div>
                         </div>
-                        <div className="space-y-3">
-                            <h1 className="text-3xl font-bold">Video Marker</h1>
-                            <div className="flex items-center">
-                                <div className="flex-initial">
-                                    <Input icon={ClockIcon} type="number" min={0} max={72} placeholder="00" />
+                        {recipeContext.videoUrl &&
+                            <div className="space-y-3">
+                                <h1 className="text-3xl font-bold">Video Marker</h1>
+                                <div className="flex items-center">
+                                    <div className="flex-initial">
+                                        <Input icon={ClockIcon} type="number" min={0} max={72} placeholder="00" />
+                                    </div>
+                                    <div className="flex-initial ml-3 mr-5">h</div>
+                                    <div className="flex-initial">
+                                        <Input icon={ClockIcon} type="number" min={0} max={59} placeholder="00" />
+                                    </div>
+                                    <div className="flex-initial ml-3">m</div>
                                 </div>
-                                <div className="flex-initial ml-3 mr-5">h</div>
-                                <div className="flex-initial">
-                                    <Input icon={ClockIcon} type="number" min={0} max={59} placeholder="00" />
-                                </div>
-                                <div className="flex-initial ml-3">m</div>
                             </div>
-                        </div>
+                        }
                         {/* <div className="space-y-3">
                             <h1 className="text-3xl font-bold">Associate Photos</h1>
                         </div> */}

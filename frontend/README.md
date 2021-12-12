@@ -1,46 +1,28 @@
-# Getting Started with Create React App
+# Eat & Share Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The frontend consists of a simple CRA single page application. It uses React, Tailwindcss for the styling and other libraries (you can consult the `package.json` if you're interested).
 
-## Available Scripts
+## Running the app
 
-In the project directory, you can run:
+To run this app you must install NodeJS on your computer and the *yarn* package manager. If you're lazy *npm* should suffice as well.
 
-### `yarn start`
+```sh
+yarn install # Install the dependencies
+yarn start # Run the app in dev mode
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+After this you should be able to go to `localhost:8080` and access the React app :)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## What's not done
 
-### `yarn test`
+Much of this app is just a mock... A very simple mock... Like so simple I've created 2 states to do the search, one for the country and another for the ingredient. 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Like, we are humans, we have lives besides the school, and we have other assignments as well. We can't be expected to produce something decent within the given timeframe, specially when only one member of the group is comfortable with the tech stack. So my apologies for the horrible code, and lack of functionality you may find while navigating through this app.
 
-### `yarn build`
+If we have time, we'll try to improve this app and take it to a semi-production level, with integration to the almost-completed backend we've developed.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Some quirks:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- The search sorting (by most popular, etc...) is not done
+- The image functionality is not working (no uploads, no galleries, no everything related to images :[ )
